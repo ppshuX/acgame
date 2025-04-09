@@ -6,7 +6,7 @@ class Settings {
         this.username = "";
         this.photo = "";
 
-        this.$settings = $(`
+       this.$settings = $(`
 <div class="ac-game-settings">
     <div class="ac-game-settings-login">
         <div class="ac-game-settings-title">
@@ -38,6 +38,13 @@ class Settings {
             <br>
             <div>
                 AcWing一键登录
+            </div>
+        </div>
+        <div class="ac-game-settings-qq">
+            <img width="30" src="https://app7454.acapp.acwing.com.cn/static/image/settings/qq_logo.png">
+            <br><br>
+            <div>
+                QQ一键登录
             </div>
         </div>
     </div>
@@ -78,9 +85,17 @@ class Settings {
                 AcWing一键登录
             </div>
         </div>
+        <div class="ac-game-settings-qq">
+            <img width="30" src="https://app7454.acapp.acwing.com.cn/static/image/settings/qq_logo.png">
+         <br><br>
+            <div>
+                QQ一键登录
+            </div>
+        </div>
     </div>
 </div>
 `);
+ 
         this.$login = this.$settings.find(".ac-game-settings-login");
         this.$login_username = this.$login.find(".ac-game-settings-username input");
         this.$login_password = this.$login.find(".ac-game-settings-password input");
@@ -101,6 +116,7 @@ class Settings {
         this.$register.hide();
 
         this.$acwing_login = this.$settings.find('.ac-game-settings-acwing img');
+        this.$qq_login = this.$settings.find('.ac-game-settings-qq img')
 
         this.root.$ac_game.append(this.$settings);
 
@@ -124,6 +140,9 @@ class Settings {
 
         this.$acwing_login.click(function(){
             outer.acwing_login();
+        });
+        this.$qq_login.click(function () {
+            outer.qq_login();
         });
     }
 
@@ -158,6 +177,19 @@ class Settings {
                 }
             }
         })
+    }
+
+    qq_login() {
+        var url = window.location.href;
+        $.ajax({
+            url: url + "settings/qq/apply_code/",
+            type: "GET",
+            success: function (resp) {
+                if (resp.result === "success") {
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        });
     }
 
     login_on_remote() {  // 在远程服务器上登录

@@ -202,8 +202,8 @@ class Player extends AcGameObject {
         }
         this.damage_x = Math.cos(angle);
         this.damage_y = Math.sin(angle);
-        this.damage_speed = damage * 100;
-        this.speed *= 0.8;
+        this.damage_speed = damage * 80;
+        this.speed *= 1.2;
     }
 
     receive_attack(x, y, angle, damage, ball_uuid, attacker) {
