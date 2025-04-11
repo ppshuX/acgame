@@ -104,13 +104,13 @@ class Player extends AcGameObject {
         });
 
         this.playground.game_map.$canvas.keydown(function(e) {
-            if (e.which === 13) {  // Enter键
+            if (e.which === 13) {  // enter
                 if (outer.playground.mode === "multi mode") {  // 打开聊天框
                     outer.playground.chat_field.show_input();
                     return false;
                 }
-            } else if (e.which === 27) {  // Esc键
-                if (outer.playground.mode === "multi mode") {
+            } else if (e.which === 27) {  // esc
+                if (outer.playground.mode === "multi mode") {  // 关闭聊天框
                     outer.playground.chat_field.hide_input();
                 }
             }
@@ -202,7 +202,7 @@ class Player extends AcGameObject {
         }
         this.damage_x = Math.cos(angle);
         this.damage_y = Math.sin(angle);
-        this.damage_speed = damage * 80;
+        this.damage_speed = damage * 100;
         this.speed *= 1.2;
     }
 
@@ -216,12 +216,21 @@ class Player extends AcGameObject {
     update() {
         this.spent_time += this.timedelta / 1000;
 
+        this.update_win();
+
         if (this.character === "me" && this.playground.state === "fighting") {
             this.update_coldtime();
         }
         this.update_move();
 
         this.render();
+    }
+
+    update_win() {
+        if (this.playground.state === "fighting" && this.character === "me" && this.playground.players.length === 1) {
+            this.playground.state = "over";
+            this.playground.score_board.win();
+        }
     }
 
     update_coldtime() {
@@ -327,8 +336,12 @@ class Player extends AcGameObject {
     }
 
     on_destroy() {
-        if (this.character === "me")
-            this.playground.state = "over";
+        if (this.character === "me") {
+            if (this.playground.state === "fighting") {
+                this.playground.state = "over";
+                this.playground.score_board.lose();
+            }
+        }
 
         for (let i = 0; i < this.playground.players.length; i ++ ) {
             if (this.playground.players[i] === this) {
